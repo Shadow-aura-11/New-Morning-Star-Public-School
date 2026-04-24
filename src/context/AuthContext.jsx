@@ -134,7 +134,7 @@ export const MOCK_DATA = {
   /* ── student detailed fees ── */
   studentFees: {
     'STU001': {
-      total: 45000, paid: 32000, discount: 2000, remaining: 11000, previousBalance: 5000,
+      total: 45000, paid: 32000, discount: 2000, remaining: 11000,
       history: [
         { id: 'TXN101', type: 'Registration', amount: 5000, paid: 5000, date: '2026-03-10', status: 'Paid', mode: 'Cash' },
         { id: 'TXN102', type: 'Tuition (Q1)', amount: 15000, paid: 15000, date: '2026-04-05', status: 'Paid', mode: 'Online' },
@@ -143,18 +143,18 @@ export const MOCK_DATA = {
       ]
     },
     'STU003': {
-      total: 42000, paid: 0, discount: 0, remaining: 42000, previousBalance: 0,
+      total: 42000, paid: 0, discount: 0, remaining: 42000,
       history: []
     },
     'STU005': {
-      total: 38000, paid: 10000, discount: 1000, remaining: 27000, previousBalance: 2500,
+      total: 38000, paid: 10000, discount: 1000, remaining: 27000,
       history: [
         { id: 'TXN201', type: 'Registration', amount: 5000, paid: 5000, date: '2026-03-12', status: 'Paid', mode: 'Cash' },
         { id: 'TXN202', type: 'Tuition (Q1)', amount: 12000, paid: 5000, date: '2026-04-10', status: 'Partial', mode: 'Cash' }
       ]
     },
     'STU007': {
-      total: 40000, paid: 15000, discount: 0, remaining: 25000, previousBalance: 0,
+      total: 40000, paid: 15000, discount: 0, remaining: 25000,
       history: [
         { id: 'TXN301', type: 'Registration', amount: 5000, paid: 5000, date: '2026-03-15', status: 'Paid', mode: 'Online' },
         { id: 'TXN302', type: 'Tuition (Q1)', amount: 14000, paid: 10000, date: '2026-04-12', status: 'Partial', mode: 'Online' }

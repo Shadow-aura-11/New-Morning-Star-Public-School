@@ -23,16 +23,15 @@ export default function StudentDashboard() {
   const totalDays = studentLogs.length || 1
   const attPct = Math.round((presentDays / totalDays) * 100)
 
-  const studentFees = (MOCK_DATA.studentFees || {})[profile.id] || { total: 40000, paid: 0, discount: 0, remaining: 40000, previousBalance: 0, history: [] }
+  const studentFees = (MOCK_DATA.studentFees || {})[profile.id] || { total: 40000, paid: 0, discount: 0, remaining: 40000, history: [] }
   const totalFeesPaid = studentFees.paid
-  const totalRemaining = studentFees.remaining + (studentFees.previousBalance || 0)
   const pendingHW = globalHomework.filter(h => (h.class === profile.class || h.class === `${profile.class}-${profile.section}`) && (h.status === 'Pending' || h.status === 'Overdue')).length
 
   const stats = [
     { icon: <FiClock />, label: 'Attendance', value: `${attPct}%`, sub: `${presentDays}/${totalDays} days`, bg: attPct >= 90 ? 'var(--accent-50)' : 'var(--gold-50)', color: attPct >= 90 ? 'var(--accent-500)' : 'var(--gold-600)' },
     { icon: <FiAward />, label: 'Last Exam Score', value: '82%', sub: 'Half Yearly', bg: 'var(--primary-50)', color: 'var(--primary-500)' },
     { icon: <FiBook />, label: 'Pending Homework', value: pendingHW, sub: 'Assignments due', bg: pendingHW > 0 ? 'var(--gold-50)' : 'var(--accent-50)', color: pendingHW > 0 ? 'var(--gold-600)' : 'var(--accent-500)' },
-    { icon: <FiDollarSign />, label: 'Total Due', value: `₹${(totalRemaining / 1000).toFixed(1)}K`, sub: studentFees.previousBalance > 0 ? 'Incl. last year' : 'This session', bg: totalRemaining > 0 ? '#fff1f2' : '#f3e8ff', color: totalRemaining > 0 ? 'var(--error)' : '#8b5cf6' },
+    { icon: <FiDollarSign />, label: 'Fees Paid', value: `₹${(totalFeesPaid / 1000).toFixed(0)}K`, sub: 'This session', bg: '#f3e8ff', color: '#8b5cf6' },
   ]
 
   const dayName = new Date().toLocaleDateString('en-US', { weekday: 'long' })
@@ -44,15 +43,6 @@ export default function StudentDashboard() {
         <div className="dash-page-title">Hello, {profile?.name?.split(' ')[0]}! 👋</div>
         <div className="dash-page-subtitle">{profile?.class}-{profile?.section || 'A'} | Roll No. {profile?.rollNo || 'N/A'} | {today}</div>
       </div>
-
-      {studentFees.previousBalance > 0 && (
-        <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 'var(--radius-lg)', padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 15, color: '#92400e', marginBottom: 'var(--space-5)' }}>
-          <FiAlertCircle size={20} />
-          <div style={{ fontSize: 'var(--text-sm)' }}>
-            <strong>Last year unpaid fees:</strong> You have an outstanding balance of <strong>₹{studentFees.previousBalance.toLocaleString()}</strong> from the previous session.
-          </div>
-        </div>
-      )}
 
       <div className="dash-stat-grid">
         {stats.map((s, i) => (

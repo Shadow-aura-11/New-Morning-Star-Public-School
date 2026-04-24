@@ -45,23 +45,11 @@ export default function FeesPage() {
     
     const amount = parseFloat(collectForm.amount)
     const discount = parseFloat(collectForm.discount)
-    const totalReduction = amount + discount
-    
-    let newPreviousBalance = current.previousBalance || 0
-    let newRemaining = current.remaining
-
-    if (totalReduction <= newPreviousBalance) {
-      newPreviousBalance -= totalReduction
-    } else {
-      const surplus = totalReduction - newPreviousBalance
-      newPreviousBalance = 0
-      newRemaining -= surplus
-    }
     
     const newTxn = {
       id: `TXN${Date.now()}`,
       type: collectForm.type,
-      amount: totalReduction,
+      amount: amount + discount,
       paid: amount,
       date: collectForm.date,
       status: 'Paid',
@@ -75,8 +63,7 @@ export default function FeesPage() {
         ...current,
         paid: current.paid + amount,
         discount: current.discount + discount,
-        remaining: newRemaining,
-        previousBalance: newPreviousBalance,
+        remaining: current.remaining - (amount + discount),
         history: [newTxn, ...current.history]
       }
     }
@@ -87,7 +74,7 @@ export default function FeesPage() {
     setPrintData(newTxn) // Open print preview
   }
 
-  const getStudentFees = (id) => feeRecords[id] || { total: 40000, paid: 0, discount: 0, remaining: 40000, previousBalance: 0, history: [] }
+  const getStudentFees = (id) => feeRecords[id] || { total: 40000, paid: 0, discount: 0, remaining: 40000, history: [] }
 
   // Print Logic
   const printReceipt = () => {
@@ -170,21 +157,10 @@ export default function FeesPage() {
                   </div>
                   <div style={{ textAlign: 'right' }}>
                     <div style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, opacity: 0.8 }}>Balance Amount</div>
-                    <div style={{ fontSize: 28, fontWeight: 800 }}>₹{(getStudentFees(selectedStudent.id).remaining + (getStudentFees(selectedStudent.id).previousBalance || 0)).toLocaleString()}</div>
+                    <div style={{ fontSize: 28, fontWeight: 800 }}>₹{getStudentFees(selectedStudent.id).remaining.toLocaleString()}</div>
                   </div>
                 </div>
               </div>
-
-              {getStudentFees(selectedStudent.id).previousBalance > 0 && (
-                <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 'var(--radius-lg)', padding: '15px 20px', display: 'flex', alignItems: 'center', gap: 15, color: '#92400e' }}>
-                  <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}><FiAlertCircle /></div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 14, fontWeight: 700 }}>Last year unpaid fees detected</div>
-                    <div style={{ fontSize: 12, opacity: 0.8 }}>An outstanding balance of <strong>₹{getStudentFees(selectedStudent.id).previousBalance.toLocaleString()}</strong> has been carried forward from the previous session.</div>
-                  </div>
-                  <div style={{ fontSize: 18, fontWeight: 800 }}>₹{getStudentFees(selectedStudent.id).previousBalance.toLocaleString()}</div>
-                </div>
-              )}
 
               {/* Stats Grid */}
               <div className="dash-stat-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
@@ -205,15 +181,15 @@ export default function FeesPage() {
                 <div className="dash-stat-card">
                   <div className="dash-stat-icon" style={{ background: '#fef2f2', color: 'var(--error)' }}><FiAlertCircle /></div>
                   <div>
-                    <div className="dash-stat-value">₹{(getStudentFees(selectedStudent.id).remaining + (getStudentFees(selectedStudent.id).previousBalance || 0)).toLocaleString()}</div>
-                    <div className="dash-stat-label">Total Remaining</div>
+                    <div className="dash-stat-value">₹{getStudentFees(selectedStudent.id).remaining.toLocaleString()}</div>
+                    <div className="dash-stat-label">Remaining</div>
                   </div>
                 </div>
                 <div className="dash-stat-card">
                   <div className="dash-stat-icon" style={{ background: 'var(--gold-50)', color: 'var(--gold-600)' }}><FiTag /></div>
                   <div>
-                    <div className="dash-stat-value">₹{getStudentFees(selectedStudent.id).previousBalance.toLocaleString()}</div>
-                    <div className="dash-stat-label">Last Year Unpaid</div>
+                    <div className="dash-stat-value">₹{getStudentFees(selectedStudent.id).discount.toLocaleString()}</div>
+                    <div className="dash-stat-label">Discounted</div>
                   </div>
                 </div>
               </div>
